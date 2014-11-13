@@ -127,8 +127,8 @@
     options.dataTypes.shift();
 
     if (files.length) {
-      options.type = (options.type || options.method).toLowerCase() || 'post';
-      form = $("<form enctype='multipart/form-data' method='" + options.type + "'></form>").
+      options.method = (options.type || options.method).toLowerCase() || 'post';
+      form = $("<form enctype='multipart/form-data' method='post'></form>").
         hide().attr({action: options.url, target: name});
 
       // If there is any additional data specified via the `data` option,
@@ -137,6 +137,10 @@
       // get serialized to a string.
       if (typeof(options.data) === "string" && options.data.length > 0) {
         $.error("data must not be serialized");
+      }
+      if (options.method != 'post' && options.method != 'get') {
+        $("<input type='hidden' />").attr({name: '_method', value: options.method}).
+          appendTo(form);
       }
       $.each(options.data || {}, function(name, value) {
         if ($.isPlainObject(value)) {
